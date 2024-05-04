@@ -9,6 +9,7 @@ import co.edu.unisbana.Biblioteca.infraestructure.out.persistence.orm.PrestamoOR
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,16 +24,16 @@ public class PrestamoAdapterRepository implements PrestamoPort {
 
     @Override
     public UUID guardarPrestamo(Libro libro) {
-        LibroORM libroORM = libroJPARepository.findById(libro.getIsbn()).get();
-
-        PrestamoORM prestamo = new PrestamoORM();
-        prestamo.setUuid(UUID.randomUUID());
-        prestamo.setLibro(libroORM); // Suponiendo que ya tienes el objeto LibroORM
-        prestamo.setFechaPrestamo(LocalDate.now());
-        prestamo.setFechaDevolucion(null);
-
-        prestamoJPARepository.save(prestamo);
-
+        Optional<LibroORM> libroORMOptional = libroJPARepository.findById(libro.getIsbn());
+        if (libroORMOptional.isPresent()) {
+            LibroORM libroORM = libroORMOptional.get();
+            PrestamoORM prestamo = new PrestamoORM();
+            prestamo.setUuid(UUID.randomUUID());
+            prestamo.setLibro(libroORM);
+            prestamo.setFechaPrestamo(LocalDate.now());
+            prestamo.setFechaDevolucion(null);
+            prestamoJPARepository.save(prestamo);
+        }
         return UUID.randomUUID();
     }
 }
