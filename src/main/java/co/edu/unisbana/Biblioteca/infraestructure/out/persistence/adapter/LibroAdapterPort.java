@@ -29,15 +29,27 @@ public class LibroAdapterPort implements LibroPort {
 
     @Override
     public Libro obtenerLibro(String isbn) {
-        Optional<LibroORM> byId = libroJPARepository.findById(isbn);
-        byId.ifPresent(LibroORM::converToModel);
-        return null;
+        Optional<LibroORM> libroORM = libroJPARepository.findById(isbn);
+        return libroORM.map(LibroORM::converToModel).orElse(null);
+    }
+
+    @Override
+    public void guardarLibro(Libro libro) {
+        LibroORM libroORM = new LibroORM();
+        libroORM.setIsbn(libro.getIsbn());
+        libroORM.setAutor(libro.getAutor());
+        libroORM.setTitulo(libro.getTitulo());
+        libroORM.setCantidadDisponible(libro.getCantidadDisponible());
+        libroJPARepository.save(libroORM);
     }
 
     @Override
     public void actualizarStock(Libro libro) {
-        LibroORM libroORM = libroJPARepository.findById(libro.getIsbn()).get();
-        libroORM.setCantidadDisponible(libro.getCantidadDisponible());
-        libroJPARepository.save(libroORM);
+        Optional<LibroORM> libroORMOptional = libroJPARepository.findById(libro.getIsbn());
+        if (libroORMOptional.isPresent()) {
+            LibroORM libroORM = libroORMOptional.get();
+            libroORM.setCantidadDisponible(libro.getCantidadDisponible());
+            libroJPARepository.save(libroORM);
+        }
     }
 }

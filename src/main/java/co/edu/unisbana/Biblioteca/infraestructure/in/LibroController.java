@@ -1,11 +1,13 @@
 package co.edu.unisbana.Biblioteca.infraestructure.in;
 
 import co.edu.unisbana.Biblioteca.application.port_in.IAnadirLibro;
+import co.edu.unisbana.Biblioteca.application.port_in.IMostrarLibros;
 import co.edu.unisbana.Biblioteca.application.port_in.IRealizarPrestamo;
 import co.edu.unisbana.Biblioteca.application.usecase.LibroDTO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import co.edu.unisbana.Biblioteca.domain.entity.Libro;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class LibroController {
@@ -13,18 +15,26 @@ public class LibroController {
     private final IRealizarPrestamo prestamo;
     private final IAnadirLibro Libro;
 
-    public LibroController(IRealizarPrestamo prestamo, IAnadirLibro Libro) {
+    private final IMostrarLibros mostrar;
+
+    public LibroController(IRealizarPrestamo prestamo, IAnadirLibro libro, IMostrarLibros mostrar) {
         this.prestamo = prestamo;
-        this.Libro = Libro;
+        Libro = libro;
+        this.mostrar = mostrar;
     }
 
-    @PostMapping(path = "/prestamo")
-    public void realizarPrestamo(@RequestBody String isbn){
+    @PutMapping(path = "/prestamo/{isbn}")
+    public void realizarPrestamo(@PathVariable String isbn){
         prestamo.RealizarPrestamo(isbn);
     }
 
     @PostMapping(path = "/nuevolibro")
     public void anadirLibro(@RequestBody LibroDTO libroDTO){
         Libro.AnadirLibro(libroDTO);
+    }
+
+    @GetMapping(path = "/verlibros")
+    public List<Libro> getLibros(){
+        return mostrar.mostrarLibros();
     }
 }

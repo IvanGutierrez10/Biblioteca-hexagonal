@@ -9,5 +9,7 @@ public interface LibroPort {
     List<Libro> obtenerLibros ();
     Libro obtenerLibro(String isbn);
 
+    void guardarLibro(Libro libro);
+
     void actualizarStock(Libro libro);
 }
