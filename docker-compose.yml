@@ -8,20 +8,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "8080:8080"
-
     depends_on:
         - db
 
   db:
     container_name: hexagonal_db
     image: mysql:latest
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: secreto
       MYSQL_DATABASE: testdb
       MYSQL_USER: olasoyyo
       MYSQL_PASSWORD: secreto
+    ports:
+      - "3306:3306"
 
 
 
