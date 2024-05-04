@@ -15,7 +15,7 @@ public class LibroAdapterPort implements LibroPort {
 
     private final LibroJPARepository libroJPARepository;
 
-    public LibroAdapterPort(LibroJPARepository libroJPARepository){
+    public LibroAdapterPort(LibroJPARepository libroJPARepository) {
         this.libroJPARepository = libroJPARepository;
     }
 
@@ -50,6 +50,8 @@ public class LibroAdapterPort implements LibroPort {
             LibroORM libroORM = libroORMOptional.get();
             libroORM.setCantidadDisponible(libro.getCantidadDisponible());
             libroJPARepository.save(libroORM);
+        } else {
+            System.out.println("No lo encontre");
         }
     }
 }

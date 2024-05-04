@@ -30,6 +30,7 @@ public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro, IMostr
         } else {
             libro.realizarPrestamo();
             System.out.println("prestamo exitoso");
+            System.out.println(libro.getCantidadDisponible());
             libroPort.actualizarStock(libro);
             System.out.println("prestamo bd");
             prestamoPort.guardarPrestamo(libro);
@@ -53,4 +54,5 @@ public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro, IMostr
     public List<Libro> mostrarLibros() {
         return libroPort.obtenerLibros();
     }
+
 }

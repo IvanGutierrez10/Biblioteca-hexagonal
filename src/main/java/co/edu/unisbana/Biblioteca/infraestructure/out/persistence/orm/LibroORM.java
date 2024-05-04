@@ -20,6 +20,6 @@ public class LibroORM {
     private int cantidadDisponible;
 
     public Libro converToModel() {
-        return new Libro(this.isbn, this.titulo, this.autor, this.cantidadDisponible);
+        return new Libro(this.titulo, this.autor, this.isbn, this.cantidadDisponible);
     }
 }
