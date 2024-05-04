@@ -6,7 +6,9 @@ import co.edu.unisbana.Biblioteca.infraestructure.out.persistence.adapter.reposi
 import co.edu.unisbana.Biblioteca.infraestructure.out.persistence.orm.LibroORM;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LibroAdapterPort implements LibroPort {
@@ -15,6 +17,14 @@ public class LibroAdapterPort implements LibroPort {
 
     public LibroAdapterPort(LibroJPARepository libroJPARepository){
         this.libroJPARepository = libroJPARepository;
+    }
+
+    @Override
+    public List<Libro> obtenerLibros() {
+        List<LibroORM> librosORM = libroJPARepository.findAll();
+        return librosORM.stream()
+                .map(LibroORM::converToModel)
+                .collect(Collectors.toList());
     }
 
     @Override

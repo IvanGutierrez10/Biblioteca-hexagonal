@@ -4,5 +4,5 @@ import co.edu.unisbana.Biblioteca.application.usecase.LibroDTO;
 
 public interface IRealizarPrestamo {
 
-    void RealizarPrestamo (LibroDTO dto);
+    void RealizarPrestamo (String isbn);
 }

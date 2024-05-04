@@ -1,40 +1,46 @@
 package co.edu.unisbana.Biblioteca.application.usecase;
 
 import co.edu.unisbana.Biblioteca.application.exception.LibroNoExisteException;
+import co.edu.unisbana.Biblioteca.application.exception.LibroYaExisteException;
 import co.edu.unisbana.Biblioteca.application.port_in.IAnadirLibro;
-import co.edu.unisbana.Biblioteca.application.port_in.IObtenerLibros;
 import co.edu.unisbana.Biblioteca.application.port_in.IRealizarPrestamo;
 import co.edu.unisbana.Biblioteca.domain.entity.Libro;
 import co.edu.unisbana.Biblioteca.domain.repository.LibroPort;
+import co.edu.unisbana.Biblioteca.domain.repository.PrestamoPort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class PrestamosUseCase implements IRealizarPrestamo, IObtenerLibros, IAnadirLibro {
+public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro {
     private final LibroPort libroPort;
+    private final PrestamoPort prestamoPort;
 
-    public PrestamosUseCase(LibroPort libroPort){
+    public PrestamosUseCase(LibroPort libroPort, PrestamoPort prestamoPort) {
         this.libroPort = libroPort;
+        this.prestamoPort = prestamoPort;
     }
 
     @Override
-    public void RealizarPrestamo(LibroDTO dto) {
+    public void RealizarPrestamo(String isbn) {
+        Libro libro = libroPort.obtenerLibro(isbn);
+        if(libro == null){
+            throw new LibroNoExisteException(isbn);
+        } else {
+            libro.realizarPrestamo();
+            libroPort.actualizarStock(libro);
+            prestamoPort.guardarPrestamo(libro);
+        }
+
+    }
+
+    @Override
+    public void AnadirLibro(LibroDTO dto) {
         Libro libro = libroPort.obtenerLibro(dto.isbn());
         if(libro == null){
-            throw new LibroNoExisteException(dto.isbn());
+            Libro nuevolibro = new Libro(dto.titulo(), dto.autor(), dto.isbn(), dto.cantidadDisponible());
+        } else {
+            throw new LibroYaExisteException(dto.isbn());
         }
-        libro.realizarPrestamo();
-        libroPort.actualizarStock(libro);
-    }
-
-    @Override
-    public void AnadirLibro() {
 
     }
 
-    @Override
-    public List<LibroDTO> obtenerLibros() {
-        return null;
-    }
 }
