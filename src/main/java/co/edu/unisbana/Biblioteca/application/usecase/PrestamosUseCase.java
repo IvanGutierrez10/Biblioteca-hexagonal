@@ -3,14 +3,17 @@ package co.edu.unisbana.Biblioteca.application.usecase;
 import co.edu.unisbana.Biblioteca.application.exception.LibroNoExisteException;
 import co.edu.unisbana.Biblioteca.application.exception.LibroYaExisteException;
 import co.edu.unisbana.Biblioteca.application.port_in.IAnadirLibro;
+import co.edu.unisbana.Biblioteca.application.port_in.IMostrarLibros;
 import co.edu.unisbana.Biblioteca.application.port_in.IRealizarPrestamo;
 import co.edu.unisbana.Biblioteca.domain.entity.Libro;
 import co.edu.unisbana.Biblioteca.domain.repository.LibroPort;
 import co.edu.unisbana.Biblioteca.domain.repository.PrestamoPort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro {
+public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro, IMostrarLibros {
     private final LibroPort libroPort;
     private final PrestamoPort prestamoPort;
 
@@ -37,10 +40,14 @@ public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro {
         Libro libro = libroPort.obtenerLibro(dto.isbn());
         if(libro == null){
             Libro nuevolibro = new Libro(dto.titulo(), dto.autor(), dto.isbn(), dto.cantidadDisponible());
+            libroPort.guardarLibro(nuevolibro);
         } else {
             throw new LibroYaExisteException(dto.isbn());
         }
-
     }
 
+    @Override
+    public List<Libro> mostrarLibros() {
+        return libroPort.obtenerLibros();
+    }
 }
