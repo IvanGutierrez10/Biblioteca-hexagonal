@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+
+  hexagonal:
+    container_name: hexagonal
+    image: hexagonal
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+    depends_on:
+        - db
+
+  db:
+    container_name: hexagonal_db
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: secreto
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: olasoyyo
+      MYSQL_PASSWORD: secreto
+
+
+
+
