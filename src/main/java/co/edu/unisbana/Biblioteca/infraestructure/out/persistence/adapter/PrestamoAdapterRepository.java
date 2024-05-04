@@ -31,7 +31,6 @@ public class PrestamoAdapterRepository implements PrestamoPort {
             prestamo.setUuid(UUID.randomUUID());
             prestamo.setLibro(libroORM);
             prestamo.setFechaPrestamo(LocalDate.now());
-            prestamo.setFechaDevolucion(null);
             prestamoJPARepository.save(prestamo);
         }
         return UUID.randomUUID();

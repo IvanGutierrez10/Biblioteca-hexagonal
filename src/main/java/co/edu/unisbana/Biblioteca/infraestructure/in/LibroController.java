@@ -33,7 +33,7 @@ public class LibroController {
         Libro.AnadirLibro(libroDTO);
     }
 
-    @GetMapping(path = "/verlibros")
+    @GetMapping(path = "/libros")
     public List<Libro> getLibros(){
         return mostrar.mostrarLibros();
     }

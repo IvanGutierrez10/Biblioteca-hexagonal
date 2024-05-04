@@ -29,10 +29,7 @@ public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro, IMostr
             throw new LibroNoExisteException(isbn);
         } else {
             libro.realizarPrestamo();
-            System.out.println("prestamo exitoso");
-            System.out.println(libro.getCantidadDisponible());
             libroPort.actualizarStock(libro);
-            System.out.println("prestamo bd");
             prestamoPort.guardarPrestamo(libro);
         }
 
@@ -41,7 +38,6 @@ public class PrestamosUseCase implements IRealizarPrestamo, IAnadirLibro, IMostr
     @Override
     public void AnadirLibro(LibroDTO dto) {
         Libro libro = libroPort.obtenerLibro(dto.isbn());
-        System.out.println(dto.cantidadDisponible());
         if(libro == null){
             Libro nuevolibro = new Libro(dto.titulo(), dto.autor(), dto.isbn(), dto.cantidadDisponible());
             libroPort.guardarLibro(nuevolibro);
